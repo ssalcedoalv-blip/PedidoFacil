@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Ventana principal: menú a la izquierda, título arriba y la vista de cada sección al centro -->
+<BorderPane styleClass="raiz" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pedidofacil.controllers.MainController">
+   <left>
+      <VBox prefWidth="200.0" styleClass="menu-lateral">
+         <children>
+            <Label styleClass="titulo-menu" text="PedidoFácil" />
+            <Button fx:id="btnInicio" maxWidth="Infinity" onAction="#mostrarInicio" styleClass="boton-menu" text="Inicio" />
+            <Button fx:id="btnPedidos" maxWidth="Infinity" onAction="#mostrarPedidos" styleClass="boton-menu" text="Pedidos" />
+            <Button fx:id="btnNuevoPedido" maxWidth="Infinity" onAction="#mostrarNuevoPedido" styleClass="boton-menu" text="Nuevo pedido" />
+            <Button fx:id="btnProductos" maxWidth="Infinity" onAction="#mostrarProductos" styleClass="boton-menu" text="Productos" />
+            <Button fx:id="btnHistorial" maxWidth="Infinity" onAction="#mostrarHistorial" styleClass="boton-menu" text="Historial" />
+         </children>
+      </VBox>
+   </left>
+   <top>
+      <Label fx:id="lblTitulo" maxWidth="Infinity" styleClass="encabezado" text="Inicio" />
+   </top>
+   <center>
+      <StackPane fx:id="contenedor" />
+   </center>
+</BorderPane>

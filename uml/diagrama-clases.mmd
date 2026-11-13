@@ -1,0 +1,264 @@
+---
+title: PedidoFácil - Diagrama de clases (proyecto completo)
+---
+classDiagram
+direction TB
+
+%% ===== app =====
+class Main {
+    +start(Stage) void
+    +main(String[])$ void
+}
+
+%% ===== controllers =====
+class UsaServicios {
+    <<interface>>
+    +inicializar(ProductoService, PedidoService) void
+}
+class MainController {
+    -ProductoService productoService
+    -PedidoService pedidoService
+    +initialize() void
+    +inicializar(ProductoService, PedidoService) void
+    -mostrar(titulo, rutaFxml, Button) void
+}
+class InicioController {
+    +inicializar(ProductoService, PedidoService) void
+}
+class PedidosController {
+    -PedidoService pedidoService
+    +inicializar(ProductoService, PedidoService) void
+    -avanzarEstado() void
+}
+class NuevoPedidoController {
+    -PedidoService pedidoService
+    -ObservableList~ItemPedido~ carrito
+    +inicializar(ProductoService, PedidoService) void
+    -agregarProducto() void
+    -quitarProducto() void
+    -crearPedido() void
+}
+class ProductosController {
+    -ProductoService productoService
+    +inicializar(ProductoService, PedidoService) void
+    -agregarProducto() void
+    -guardarCambios() void
+    -eliminarProducto() void
+}
+class HistorialController {
+    +inicializar(ProductoService, PedidoService) void
+}
+class TablaPedidos {
+    ~configurar(columnas)$ void
+}
+
+%% ===== services =====
+class PedidoService:::cliente {
+    <<Client>>
+    -Map~Modalidad, PedidoCreator~ creadores
+    -List~Pedido~ pedidos
+    -int siguienteNumero
+    +crearPedido(Modalidad, DatosCliente, List~ItemPedido~) Pedido
+    +avanzarEstado(String id) Pedido
+    +buscarPorId(String id) Optional~Pedido~
+    +listar() List~Pedido~
+    +listarActivos() List~Pedido~
+    +listarHistorial() List~Pedido~
+    +contarPorEstado(EstadoPedido) int
+    +totalVendido() int
+}
+class ProductoService {
+    -List~Producto~ productos
+    +listar() List~Producto~
+    +agregar(nombre, precio) Producto
+    +editar(id, nombre, precio) Producto
+    +eliminar(id) void
+}
+class Almacenamiento {
+    <<interface>>
+    +hayProductos() boolean
+    +cargarProductos() List~Producto~
+    +guardarProductos(List~Producto~) void
+    +cargarPedidos() List~PedidoGuardado~
+    +guardarPedidos(List~PedidoGuardado~) void
+}
+class AlmacenamientoJson {
+    -Path carpeta
+    -Gson gson
+}
+class AlmacenamientoMemoria["AlmacenamientoMemoria (solo pruebas)"]
+
+%% ===== factories (Factory Method) =====
+class PedidoCreator:::creator {
+    <<Creator>>
+    +getModalidad()* Modalidad
+    #crearPedido(id, datos, items, fecha, estado)* Pedido
+    +crear(id, datos, items) Pedido
+    +restaurar(PedidoGuardado) Pedido
+}
+class PedidoDomicilioCreator:::creator {
+    <<ConcreteCreator>>
+}
+class PedidoMesaCreator:::creator {
+    <<ConcreteCreator>>
+}
+class PedidoParaLlevarCreator:::creator {
+    <<ConcreteCreator>>
+}
+
+%% ===== models =====
+class Pedido:::producto {
+    <<Product>>
+    -String id
+    -List~ItemPedido~ items
+    -LocalDateTime fechaCreacion
+    -EstadoPedido estado
+    +getModalidad()* Modalidad
+    +getCostoAdicional()* int
+    +getDescripcionEntrega()* String
+    +getDatos()* DatosCliente
+    +getSubtotal() int
+    +getTotal() int
+    +getCantidadArticulos() int
+    +avanzarEstado() void
+}
+class PedidoDomicilio:::producto {
+    <<ConcreteProduct>>
+    -DatosCliente datos
+    +COSTO_DOMICILIO = 5000
+}
+class PedidoMesa:::producto {
+    <<ConcreteProduct>>
+    -DatosCliente datos
+}
+class PedidoParaLlevar:::producto {
+    <<ConcreteProduct>>
+    -DatosCliente datos
+}
+class ItemPedido {
+    -int productoId
+    -String nombre
+    -int precioUnitario
+    -int cantidad
+    +getSubtotal() int
+}
+class Producto {
+    -int id
+    -String nombre
+    -int precio
+    +validar(nombre, precio)$ void
+}
+class DatosCliente {
+    -String nombre
+    -String telefono
+    -String direccion
+    -int numeroMesa
+    +paraDomicilio(nombre, telefono, direccion)$ DatosCliente
+    +paraMesa(numeroMesa)$ DatosCliente
+    +paraLlevar(nombre)$ DatosCliente
+}
+class PedidoGuardado {
+    -String id
+    -String fechaCreacion
+    +desde(Pedido)$ PedidoGuardado
+    +getDatos() DatosCliente
+    +getItems() List~ItemPedido~
+}
+class Modalidad {
+    <<enumeration>>
+    DOMICILIO
+    MESA
+    PARA_LLEVAR
+    +getEtiqueta() String
+}
+class EstadoPedido {
+    <<enumeration>>
+    PENDIENTE
+    EN_PREPARACION
+    LISTO
+    ENTREGADO
+    +siguiente() EstadoPedido
+    +esFinal() boolean
+}
+
+%% ===== util =====
+class Formato {
+    +moneda(int)$ String
+    +fechaHora(LocalDateTime)$ String
+    +linea(ItemPedido)$ String
+    +lineasDetalle(Pedido)$ List~String~
+}
+class Mensajes {
+    +ok(Label, String)$ void
+    +error(Label, String)$ void
+    +limpiar(Label)$ void
+}
+
+%% ===== relaciones: app y controladores =====
+Main ..> AlmacenamientoJson : crea
+Main ..> ProductoService : crea
+Main ..> PedidoService : crea
+Main ..> MainController : carga MainView.fxml
+UsaServicios <|.. MainController
+UsaServicios <|.. InicioController
+UsaServicios <|.. PedidosController
+UsaServicios <|.. NuevoPedidoController
+UsaServicios <|.. ProductosController
+UsaServicios <|.. HistorialController
+MainController --> ProductoService
+MainController --> PedidoService
+PedidosController --> PedidoService
+NuevoPedidoController --> PedidoService
+ProductosController --> ProductoService
+NuevoPedidoController ..> ProductoService
+InicioController ..> PedidoService
+InicioController ..> ProductoService
+HistorialController ..> PedidoService
+PedidosController ..> TablaPedidos
+HistorialController ..> TablaPedidos
+TablaPedidos ..> Pedido
+TablaPedidos ..> Formato
+
+%% ===== relaciones: servicios y almacenamiento =====
+PedidoService "1" o-- "*" Pedido
+PedidoService "1" o-- "*" PedidoCreator : una por modalidad
+PedidoService --> Almacenamiento
+ProductoService "1" o-- "*" Producto
+ProductoService --> Almacenamiento
+Almacenamiento <|.. AlmacenamientoJson
+Almacenamiento <|.. AlmacenamientoMemoria
+Almacenamiento ..> PedidoGuardado
+
+%% ===== relaciones: Factory Method =====
+PedidoCreator <|-- PedidoDomicilioCreator
+PedidoCreator <|-- PedidoMesaCreator
+PedidoCreator <|-- PedidoParaLlevarCreator
+PedidoCreator ..> Pedido : crea
+PedidoCreator ..> PedidoGuardado : restaura
+PedidoDomicilioCreator ..> PedidoDomicilio : instancia
+PedidoMesaCreator ..> PedidoMesa : instancia
+PedidoParaLlevarCreator ..> PedidoParaLlevar : instancia
+
+%% ===== relaciones: modelos =====
+Pedido <|-- PedidoDomicilio
+Pedido <|-- PedidoMesa
+Pedido <|-- PedidoParaLlevar
+Pedido "1" *-- "1..*" ItemPedido
+Pedido --> "1" EstadoPedido
+Pedido ..> Modalidad
+PedidoDomicilio --> "1" DatosCliente
+PedidoMesa --> "1" DatosCliente
+PedidoParaLlevar --> "1" DatosCliente
+ItemPedido ..> Producto : copia nombre y precio
+PedidoGuardado --> "*" ItemPedido
+PedidoGuardado --> Modalidad
+PedidoGuardado --> EstadoPedido
+PedidoGuardado ..> Pedido : desde(pedido)
+Formato ..> Pedido
+Formato ..> ItemPedido
+
+note for Mensajes "Los controladores también usan Formato y Mensajes (métodos estáticos); esas flechas se omiten para no saturar el diagrama"
+
+classDef creator fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+classDef producto fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+classDef cliente fill:#bbdefb,stroke:#1565c0,stroke-width:2px

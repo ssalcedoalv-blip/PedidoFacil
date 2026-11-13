@@ -1,0 +1,142 @@
+---
+title: PedidoFácil - Roles del Factory Method
+---
+classDiagram
+direction TB
+
+class PedidoCreator:::creator {
+    <<Creator>>
+    +getModalidad()* Modalidad
+    #crearPedido(id, datos, items, fecha, estado)* Pedido
+    +crear(id, datos, items) Pedido
+    +restaurar(PedidoGuardado) Pedido
+}
+class PedidoDomicilioCreator:::creator {
+    <<ConcreteCreator>>
+    +getModalidad() Modalidad
+    #crearPedido(id, datos, items, fecha, estado) Pedido
+}
+class PedidoMesaCreator:::creator {
+    <<ConcreteCreator>>
+    +getModalidad() Modalidad
+    #crearPedido(id, datos, items, fecha, estado) Pedido
+}
+class PedidoParaLlevarCreator:::creator {
+    <<ConcreteCreator>>
+    +getModalidad() Modalidad
+    #crearPedido(id, datos, items, fecha, estado) Pedido
+}
+
+class PedidoService:::cliente {
+    <<Client>>
+    -Map~Modalidad, PedidoCreator~ creadores
+    +crearPedido(Modalidad, DatosCliente, List~ItemPedido~) Pedido
+}
+
+class Pedido:::producto {
+    <<Product>>
+    -String id
+    -List~ItemPedido~ items
+    -LocalDateTime fechaCreacion
+    -EstadoPedido estado
+    +getModalidad()* Modalidad
+    +getCostoAdicional()* int
+    +getDescripcionEntrega()* String
+    +getDatos()* DatosCliente
+    +getSubtotal() int
+    +getTotal() int
+    +avanzarEstado() void
+}
+class PedidoDomicilio:::producto {
+    <<ConcreteProduct>>
+    -DatosCliente datos
+    +COSTO_DOMICILIO = 5000
+    +getModalidad() Modalidad
+    +getCostoAdicional() int
+    +getDescripcionEntrega() String
+    +getDatos() DatosCliente
+}
+class PedidoMesa:::producto {
+    <<ConcreteProduct>>
+    -DatosCliente datos
+    +getModalidad() Modalidad
+    +getCostoAdicional() int
+    +getDescripcionEntrega() String
+    +getDatos() DatosCliente
+}
+class PedidoParaLlevar:::producto {
+    <<ConcreteProduct>>
+    -DatosCliente datos
+    +getModalidad() Modalidad
+    +getCostoAdicional() int
+    +getDescripcionEntrega() String
+    +getDatos() DatosCliente
+}
+
+class ItemPedido {
+    -int productoId
+    -String nombre
+    -int precioUnitario
+    -int cantidad
+    +getSubtotal() int
+}
+class Producto {
+    -int id
+    -String nombre
+    -int precio
+}
+class DatosCliente {
+    -String nombre
+    -String telefono
+    -String direccion
+    -int numeroMesa
+}
+class PedidoGuardado {
+    <<copia plana para JSON>>
+    +desde(Pedido)$ PedidoGuardado
+    +getDatos() DatosCliente
+}
+class Modalidad {
+    <<enumeration>>
+    DOMICILIO
+    MESA
+    PARA_LLEVAR
+}
+class EstadoPedido {
+    <<enumeration>>
+    PENDIENTE
+    EN_PREPARACION
+    LISTO
+    ENTREGADO
+    +siguiente() EstadoPedido
+}
+
+PedidoService "1" o-- "*" PedidoCreator : una por modalidad
+PedidoService ..> Pedido : usa
+PedidoCreator <|-- PedidoDomicilioCreator
+PedidoCreator <|-- PedidoMesaCreator
+PedidoCreator <|-- PedidoParaLlevarCreator
+PedidoCreator ..> Pedido : devuelve
+PedidoCreator ..> PedidoGuardado : restaurar
+
+PedidoDomicilioCreator ..> PedidoDomicilio : new
+PedidoMesaCreator ..> PedidoMesa : new
+PedidoParaLlevarCreator ..> PedidoParaLlevar : new
+
+Pedido <|-- PedidoDomicilio
+Pedido <|-- PedidoMesa
+Pedido <|-- PedidoParaLlevar
+Pedido "1" *-- "1..*" ItemPedido
+Pedido --> EstadoPedido
+Pedido ..> Modalidad
+PedidoDomicilio --> DatosCliente
+PedidoMesa --> DatosCliente
+PedidoParaLlevar --> DatosCliente
+ItemPedido ..> Producto : copia nombre y precio
+PedidoGuardado ..> Pedido : desde(pedido)
+
+note for PedidoCreator "Factory Method: crearPedido() lo implementa cada creador concreto, que decide qué subclase de Pedido instanciar"
+
+classDef creator fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+classDef cliente fill:#bbdefb,stroke:#1565c0,stroke-width:2px
+classDef producto fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px

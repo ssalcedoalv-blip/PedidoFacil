@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Inicio: tarjetas con el resumen del negocio -->
+<VBox styleClass="vista" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pedidofacil.controllers.InicioController">
+   <children>
+      <Label styleClass="titulo-seccion" text="Pedidos por estado" />
+      <HBox styleClass="fila-tarjetas">
+         <children>
+            <VBox styleClass="tarjeta">
+               <children>
+                  <Label styleClass="texto-tarjeta" text="Pendientes" />
+                  <Label fx:id="lblPendientes" styleClass="valor-tarjeta" text="0" />
+               </children>
+            </VBox>
+            <VBox styleClass="tarjeta">
+               <children>
+                  <Label styleClass="texto-tarjeta" text="En preparación" />
+                  <Label fx:id="lblEnPreparacion" styleClass="valor-tarjeta" text="0" />
+               </children>
+            </VBox>
+            <VBox styleClass="tarjeta">
+               <children>
+                  <Label styleClass="texto-tarjeta" text="Listos" />
+                  <Label fx:id="lblListos" styleClass="valor-tarjeta" text="0" />
+               </children>
+            </VBox>
+            <VBox styleClass="tarjeta">
+               <children>
+                  <Label styleClass="texto-tarjeta" text="Entregados" />
+                  <Label fx:id="lblEntregados" styleClass="valor-tarjeta" text="0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Label styleClass="titulo-seccion" text="Negocio" />
+      <HBox styleClass="fila-tarjetas">
+         <children>
+            <VBox styleClass="tarjeta">
+               <children>
+                  <Label styleClass="texto-tarjeta" text="Total vendido (entregados)" />
+                  <Label fx:id="lblTotalVendido" styleClass="valor-tarjeta" text="\$0" />
+               </children>
+            </VBox>
+            <VBox styleClass="tarjeta">
+               <children>
+                  <Label styleClass="texto-tarjeta" text="Productos en el menú" />
+                  <Label fx:id="lblProductos" styleClass="valor-tarjeta" text="0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

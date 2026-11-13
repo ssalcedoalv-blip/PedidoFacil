@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Nuevo pedido: datos del cliente a la izquierda, productos y totales a la derecha -->
+<HBox styleClass="vista" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pedidofacil.controllers.NuevoPedidoController">
+   <children>
+      <VBox prefWidth="360.0" styleClass="panel">
+         <children>
+            <Label styleClass="subtitulo" text="Datos del pedido" />
+            <Label text="Modalidad" />
+            <ComboBox fx:id="cmbModalidad" maxWidth="Infinity" />
+            <Label text="Nombre del cliente (domicilio y para llevar)" />
+            <TextField fx:id="txtNombre" />
+            <Label text="Teléfono (domicilio)" />
+            <TextField fx:id="txtTelefono" />
+            <Label text="Dirección (domicilio)" />
+            <TextField fx:id="txtDireccion" />
+            <Label text="Número de mesa (en mesa)" />
+            <TextField fx:id="txtMesa" />
+         </children>
+      </VBox>
+      <VBox styleClass="panel" HBox.hgrow="ALWAYS">
+         <children>
+            <Label styleClass="subtitulo" text="Productos" />
+            <ComboBox fx:id="cmbProducto" maxWidth="Infinity" promptText="Elige un producto" />
+            <HBox styleClass="fila-botones">
+               <children>
+                  <Label text="Cantidad" />
+                  <Spinner fx:id="spnCantidad" prefWidth="90.0" />
+                  <Button onAction="#agregarProducto" styleClass="boton-secundario" text="Agregar al pedido" />
+               </children>
+            </HBox>
+            <ListView fx:id="lstCarrito" VBox.vgrow="ALWAYS" />
+            <Button maxWidth="Infinity" onAction="#quitarProducto" styleClass="boton-secundario" text="Quitar seleccionado" />
+            <HBox styleClass="fila-total">
+               <children>
+                  <Label text="Subtotal" />
+                  <Label fx:id="lblSubtotal" styleClass="valor-total" text="\$0" />
+               </children>
+            </HBox>
+            <HBox styleClass="fila-total">
+               <children>
+                  <Label text="Costo adicional" />
+                  <Label fx:id="lblAdicional" styleClass="valor-total" text="\$0" />
+               </children>
+            </HBox>
+            <HBox styleClass="fila-total">
+               <children>
+                  <Label styleClass="subtitulo" text="Total" />
+                  <Label fx:id="lblTotal" styleClass="valor-total-grande" text="\$0" />
+               </children>
+            </HBox>
+            <Button maxWidth="Infinity" onAction="#crearPedido" styleClass="boton-primario" text="Crear pedido" />
+            <Label fx:id="lblMensaje" styleClass="mensaje" wrapText="true" />
+         </children>
+      </VBox>
+   </children>
+</HBox>

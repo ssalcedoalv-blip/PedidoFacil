@@ -1,0 +1,36 @@
+---
+title: "PedidoFácil - Secuencia: crear un pedido a domicilio (Factory Method en acción)"
+---
+sequenceDiagram
+    autonumber
+    actor U as Usuario
+    participant C as NuevoPedidoController
+    participant S as PedidoService<br/>«Client»
+    participant F as PedidoDomicilioCreator<br/>«ConcreteCreator»
+    participant P as PedidoDomicilio<br/>«ConcreteProduct»
+    participant G as PedidoGuardado
+    participant A as AlmacenamientoJson
+
+    U->>C: pulsa "Crear pedido"
+    C->>C: new DatosCliente(nombre, teléfono, dirección, mesa)
+    C->>S: crearPedido(DOMICILIO, datos, items)
+    S->>S: fabricaDe(DOMICILIO)<br/>(busca en el mapa de creadores)
+    S->>F: crear(id "PED-0001", datos, items)
+    Note over F: crear() es final en PedidoCreator:<br/>fecha = ahora, estado = PENDIENTE
+    F->>F: crearPedido(id, datos, items, fecha, PENDIENTE)<br/>(el método fábrica)
+    F->>P: new PedidoDomicilio(...)
+    alt datos inválidos (falta nombre, teléfono o dirección)
+        P-->>C: IllegalArgumentException
+        C-->>U: Mensajes.error(...) - no se crea ni se guarda nada
+    else datos válidos
+        P-->>F: pedido (Pedido)
+        F-->>S: pedido (Pedido)
+        S->>S: pedidos.add(pedido)
+        loop por cada pedido
+            S->>G: desde(pedido)
+        end
+        S->>A: guardarPedidos(copias)
+        A-->>S: listo (escribe pedidos.json)
+        S-->>C: pedido (total = subtotal + $5.000)
+        C-->>U: Mensajes.ok("Pedido PED-0001 creado. Total: ...")
+    end

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Historial: pedidos entregados -->
+<VBox styleClass="vista" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pedidofacil.controllers.HistorialController">
+   <children>
+      <Label fx:id="lblTotalVendido" styleClass="titulo-seccion" text="Total vendido: \$0" />
+      <HBox styleClass="fila-contenido" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="tblHistorial" HBox.hgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colId" prefWidth="85.0" text="Pedido" />
+                  <TableColumn fx:id="colFecha" prefWidth="120.0" text="Fecha" />
+                  <TableColumn fx:id="colModalidad" prefWidth="95.0" text="Modalidad" />
+                  <TableColumn fx:id="colEntrega" prefWidth="170.0" text="Entrega" />
+                  <TableColumn fx:id="colArticulos" prefWidth="70.0" styleClass="col-derecha" text="Artículos" />
+                  <TableColumn fx:id="colTotal" prefWidth="90.0" styleClass="col-derecha" text="Total" />
+                  <TableColumn fx:id="colEstado" prefWidth="110.0" text="Estado" />
+               </columns>
+            </TableView>
+            <VBox prefWidth="300.0" styleClass="panel">
+               <children>
+                  <Label styleClass="subtitulo" text="Detalle del pedido" />
+                  <ListView fx:id="lstDetalle" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

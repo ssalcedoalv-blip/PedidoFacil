@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Pedidos activos: tabla a la izquierda, detalle y botón para avanzar el estado a la derecha -->
+<VBox styleClass="vista" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pedidofacil.controllers.PedidosController">
+   <children>
+      <HBox styleClass="fila-contenido" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="tblPedidos" HBox.hgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colId" prefWidth="85.0" text="Pedido" />
+                  <TableColumn fx:id="colFecha" prefWidth="120.0" text="Fecha" />
+                  <TableColumn fx:id="colModalidad" prefWidth="95.0" text="Modalidad" />
+                  <TableColumn fx:id="colEntrega" prefWidth="170.0" text="Entrega" />
+                  <TableColumn fx:id="colArticulos" prefWidth="70.0" styleClass="col-derecha" text="Artículos" />
+                  <TableColumn fx:id="colTotal" prefWidth="90.0" styleClass="col-derecha" text="Total" />
+                  <TableColumn fx:id="colEstado" prefWidth="110.0" text="Estado" />
+               </columns>
+            </TableView>
+            <VBox prefWidth="300.0" styleClass="panel">
+               <children>
+                  <Label styleClass="subtitulo" text="Detalle del pedido" />
+                  <ListView fx:id="lstDetalle" VBox.vgrow="ALWAYS" />
+                  <Button fx:id="btnAvanzar" maxWidth="Infinity" onAction="#avanzarEstado" styleClass="boton-primario" text="Avanzar estado" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Label fx:id="lblMensaje" styleClass="mensaje" />
+   </children>
+</VBox>
